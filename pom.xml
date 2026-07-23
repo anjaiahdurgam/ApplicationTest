@@ -1,59 +1,70 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.anji.main</groupId>
-  <artifactId>ApplicationTests</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.anji.main</groupId>
+    <artifactId>ApplicationTests</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
   
-   <parent>
+    <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.0.RELEASE</version>
-        <relativePath />
-		<!-- lookup parent from repository -->
+        <version>3.2.4</version> 
+        <relativePath/>
     </parent>
+
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
+        <!-- FIX: Maps environment variables to clean properties to avoid infinite recursion -->
+        <docker.username>${env.DOCKERHUB_USER}</docker.username>
+        <docker.password>${env.DOCKERHUB_PWD}</docker.password>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+       
         <dependency>
     <groupId>com.oracle.database.jdbc</groupId>
-    <artifactId>ojdbc8</artifactId>
-    <version>12.2.0.1</version>
+    <artifactId>ojdbc11</artifactId>
+    <version>21.11.0.0</version>
 </dependency>
 
-        
+
+		<!-- FIX: Lombok must be listed here as a dependency to compile your project files -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
+
     <build>
-    <plugins>
-        <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <configuration>
-                <!-- 1. IMAGE CONFIGURATION -->
-                <image>
-                    <name>docker.io/anjaihadurgam/${project.artifactId}:${project.version}</name>
-                    <publish>true</publish>
-                </image>
-                <!-- 2. DOCKER REGISTRY CONFIGURATION (Fixes the validation error) -->
-                <docker>
-                    <publishRegistry>
-                        <username>${env.DOCKERHUB_USER}</username>
-                        <password>${env.DOCKERHUB_PWD}</password>
-                    </publishRegistry>
-                </docker>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
+        <plugins>
+			<!-- FIX: Removed the incorrect Lombok plugin block and kept only the Spring Boot plugin -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+				<!-- FIX: Matches your parent version (3.2.4) so the image tags compile correctly -->
+                <version>3.2.4</version> 
+                <configuration>
+                    <image>
+                        <name>docker.io/anjaihadurgam/${project.artifactId}:${project.version}</name>
+                        <publish>true</publish>
+                    </image>
+                    <docker>
+                        <publishRegistry>
+                            <username>${docker.username}</username>
+                            <password>${docker.password}</password>
+                        </publishRegistry>
+                    </docker>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
