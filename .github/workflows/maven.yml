@@ -27,10 +27,19 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-    - name: Build & Push docker image
-      env:
-         DOCKERHUB_USER: ${{env.DOCKERHUB_USER}}
-         DOCKERHUB_PWD: ${{env.DOCKERHUB_PWD}}
+- name: Log in to Docker Hub
+  uses: docker/login-action@v3
+  with:
+    username: ${{ secrets.DOCKERHUB_USER }}
+    password: ${{ secrets.DOCKERHUB_PWD }}
+
+- name: Build and Push Image with Maven
+  run: mvn spring-boot:build-image
+  env:
+    DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+    DOCKERHUB_PWD: ${{ secrets.DOCKERHUB_PWD }}
+
+         
       run: mvn -B spring-boot:build-image -DskipTests
       
 
