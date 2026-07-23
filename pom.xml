@@ -54,7 +54,7 @@
             <configuration>
                 <!-- 1. IMAGE CONFIGURATION -->
                 <image>
-					<name>docker.io/anjaihadurgam/application-tests:${project.version}</name>
+					<name>docker.io/anjaihadurgam/application-tests:0.0.1-SNAPSHOT:${project.version}</name>
                     <publish>true</publish>
                 </image>
                 <!-- 2. DOCKER REGISTRY CONFIGURATION (Fixes the validation error) -->
