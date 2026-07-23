@@ -1,38 +1,49 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.anji.main</groupId>
-  <artifactId>ApplicationTests</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.anji.main</groupId>
+    <artifactId>ApplicationTests</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <!-- Change this to 2.7.x or 3.x depending on your Java version -->
-    <version>3.2.4</version> 
+    <version>2.7.18</version> 
     <relativePath/>
 </parent>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
+        <!-- FIX: Maps environment variables to clean properties to avoid infinite recursion -->
+        <docker.username>${env.DOCKERHUB_USER}</docker.username>
+        <docker.password>${env.DOCKERHUB_PWD}</docker.password>
     </properties>
+
     <dependencies>
-        <dependency>
+<dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-validation</artifactId>
+    </dependency>
+		<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+       
         <dependency>
     <groupId>com.oracle.database.jdbc</groupId>
-    <artifactId>ojdbc8</artifactId>
-    <version>12.2.0.1</version>
+    <artifactId>ojdbc11</artifactId>
+    <version>21.11.0.0</version>
 </dependency>
 
-        
+
+		<!-- FIX: Lombok must be listed here as a dependency to compile your project files -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <build>
     <plugins>
